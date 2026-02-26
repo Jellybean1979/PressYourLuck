@@ -18,8 +18,8 @@ const PRIZES = [
   { type: 'bonus', icon: '✈️', label: 'VACATION!', value: 3000, extra: 'Trip to Hawaii', weight: 1 },
   { type: 'bonus', icon: '🚗', label: 'CAR!',      value: 8000, extra: 'New Car!',       weight: 1 },
   { type: 'bonus', icon: '🎁', label: 'BIG PRIZE', value: 2000, extra: 'Mystery Gift',   weight: 2 },
-  // Whammies (bad!)
-  { type: 'whammy', icon: '😈', label: 'WHAMMY!', value: 0,  weight: 6 },
+  // Whammies (bad!) — weighted at ~70% of total pool
+  { type: 'whammy', icon: '😈', label: 'WHAMMY!', value: 0,  weight: 91 },
 ];
 
 // Build weighted pool
@@ -408,4 +408,3 @@ function init() {
 }
 
 init();
-
