@@ -68,9 +68,13 @@ function buildBoard() {
   boardEl.innerHTML = '';
   boardPrizes = [];
 
-  // Generate a prize arrangement for all 18 cells
-  // Ensure roughly correct distribution
-  const arrangement = shuffle([...PRIZE_POOL]).slice(0, BOARD_SIZE);
+  // Guarantee between 4 and 8 whammies on the board
+  const whammyCount = 4 + Math.floor(Math.random() * 5); // 4-8
+  const whammyPrize = PRIZES.find(p => p.type === 'whammy');
+  const nonWhammyPool = PRIZE_POOL.filter(p => p.type !== 'whammy');
+  const whammies = Array(whammyCount).fill(whammyPrize);
+  const others = shuffle([...nonWhammyPool]).slice(0, BOARD_SIZE - whammyCount);
+  const arrangement = shuffle([...whammies, ...others]);
 
   for (let i = 0; i < BOARD_SIZE; i++) {
     const prize = arrangement[i];
