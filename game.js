@@ -61,6 +61,27 @@ const gameoverWinner = document.getElementById('gameoverWinner');
 const gameoverScores = document.getElementById('gameoverScores');
 const restartBtn    = document.getElementById('restartBtn');
 
+// ─── BUTTON STATE HELPER ─────────────────────────────────────────────────────
+function setStopBtn(mode) {
+  // mode: 'spin' | 'stop' | 'disabled'
+  if (mode === 'spin') {
+    stopBtn.disabled = false;
+    stopBtn.innerHTML = '<span class="btn-icon">🎰</span><span>SPIN!</span>';
+    stopBtn.style.background = 'linear-gradient(135deg, #1a6b1a, #22c55e)';
+    stopBtn.style.boxShadow = '0 4px 20px rgba(34,197,94,0.5)';
+  } else if (mode === 'stop') {
+    stopBtn.disabled = false;
+    stopBtn.innerHTML = '<span class="btn-icon">🛑</span><span>STOP!</span>';
+    stopBtn.style.background = 'linear-gradient(135deg, var(--red-dark), var(--red))';
+    stopBtn.style.boxShadow = '0 4px 20px rgba(230,57,70,0.5)';
+  } else {
+    stopBtn.disabled = true;
+    stopBtn.innerHTML = '<span class="btn-icon">🛑</span><span>STOP!</span>';
+    stopBtn.style.background = 'linear-gradient(135deg, var(--red-dark), var(--red))';
+    stopBtn.style.boxShadow = '0 4px 20px rgba(230,57,70,0.5)';
+  }
+}
+
 // ─── INIT BOARD ──────────────────────────────────────────────────────────────
 let boardPrizes = [];
 
@@ -154,7 +175,7 @@ function startSpin() {
 
   state.spinning = true;
   spinSpeed = 60;
-  stopBtn.disabled = false;
+  setStopBtn('stop');
   passBtn.disabled = true;
   setTurnInfo(`${state.players[state.currentPlayer].name} — SPINNING!`);
 
@@ -188,7 +209,7 @@ function slowDown() {
     } else {
       // Final cell
       state.spinning = false;
-      stopBtn.disabled = true;
+      setStopBtn('disabled');
       resolvePrize();
     }
   }
@@ -256,7 +277,7 @@ function afterResult() {
   } else {
     // Player can keep going or pass
     setTurnInfo(`${cp.name} — Spins left: ${cp.spins}. Keep going or pass!`);
-    stopBtn.disabled = false;
+    setStopBtn('spin');
     passBtn.disabled = false;
   }
 }
@@ -279,8 +300,8 @@ function endTurn() {
   }
 
   updateScoreboard();
-  setTurnInfo(`${other.name}'s turn! Press STOP! to spin.`);
-  stopBtn.disabled = false;
+  setTurnInfo(`${other.name}'s turn! Press SPIN! to spin.`);
+  setStopBtn('spin');
   passBtn.disabled = true;
 
   // Auto start
@@ -299,7 +320,7 @@ function eliminatePlayer() {
     state.currentPlayer = 1 - state.currentPlayer;
     updateScoreboard();
     setTurnInfo(`${state.players[state.currentPlayer].name}'s turn!`);
-    stopBtn.disabled = false;
+    setStopBtn('spin');
     passBtn.disabled = true;
     setTimeout(startSpin, 800);
   }
@@ -314,7 +335,7 @@ function passSpins() {
   cp.spins = 0;
 
   setTurnInfo(`${cp.name} passed ${passed} spin(s) to ${other.name}!`);
-  stopBtn.disabled = true;
+  setStopBtn('disabled');
   passBtn.disabled = true;
 
   updateScoreboard();
@@ -352,7 +373,7 @@ popupBtn.addEventListener('click', () => {
 // ─── GAME OVER ───────────────────────────────────────────────────────────────
 function triggerGameOver() {
   state.gameOver = true;
-  stopBtn.disabled = true;
+  setStopBtn('disabled');
   passBtn.disabled = true;
 
   const p0 = state.players[0];
@@ -401,10 +422,10 @@ function init() {
   buildBgEyes();
   buildBoard();
   updateScoreboard();
-  setTurnInfo(`${state.players[0].name}'s turn — Press STOP! to spin!`);
+  setTurnInfo(`${state.players[0].name}'s turn — Press SPIN! to spin!`);
 
   // Enable stop button to start
-  stopBtn.disabled = false;
+  setStopBtn('spin');
   passBtn.disabled = true;
 
   // Auto-start first spin after a beat
